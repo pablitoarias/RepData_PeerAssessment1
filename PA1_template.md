@@ -3,13 +3,13 @@
 
 ## Loading and preprocessing the data 
 ### 1. Load the data
-Read the data directly from the .zip file with the * **unz()*** function
+Read the data directly from the .zip file with the `unz()` function
 
 ```r
 data <- read.csv(unz("activity.zip", "activity.csv"))
 ```
 ### 2. Process/transform the data (if necessary) into a format suitable for your analysis
-Check the structure of the data to make sure is in the format required. Using the output of ***str()***
+Check the structure of the data to make sure is in the format required. Using the output of `str()`
 
 ```r
 str(data)
@@ -22,7 +22,7 @@ str(data)
 ##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
 ```
 The header was read correctly and the names match the variables. 
-The *date* was read as factors instead of date class and intervals were read as integer instead of factors. Fix with following code
+The *date* was read as factors instead of date class and *interval* was read as integer instead of factors. The following code makes the conversion to date and factor formats
 
 ```r
 data$date <- as.Date(data$date)
@@ -30,7 +30,7 @@ data$interval <- as.factor(data$interval)
 ```
 ## What is mean total number of steps taken per day?
 ### 1. Make a histogram of the total number of steps taken each day
-To obtain the number of steps per day we can summarize with the ***aggregate()*** function
+To obtain the number of steps per day we can summarize with the `aggregate()` function
 
 ```r
 daily_steps <- aggregate(steps ~ date, data, sum)
@@ -44,7 +44,7 @@ hist(daily_steps$steps, main = "Histogram of steps per day", xlab = "Steps per D
 ![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 ### 2. Calculate and report the mean and median total number of steps taken per day
-The ***summary()*** function can be used to provide *mean* and *median* values in one call and provides information on number of NA's 
+The `summary()` function can be used to provide *mean* and *median* values in one call and provides information on number of NA's 
 
 ```r
 summary(daily_steps)
@@ -59,7 +59,7 @@ summary(daily_steps)
 ##  3rd Qu.:2012-11-16   3rd Qu.:13294  
 ##  Max.   :2012-11-29   Max.   :21194
 ```
-Or we can call ***mean()*** and ***median()*** directly
+Or we can call `mean()` and `median()` directly
 
 ```r
 mean(daily_steps$steps, na.rm = TRUE)
@@ -78,12 +78,12 @@ median( daily_steps$steps, na.rm = TRUE)
 ```
 ## What is the average daily activity pattern?
 ### 1. Make a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
-We need to generate a time series plot of the daily 5 minutes interval average. We can use the ***aggregate()*** function to calculate mean per by interval factor
+We need to generate a time series plot of the daily 5 minutes interval average. We can use the `aggregate()` function to calculate mean by interval factor
 
 ```r
 mean_interval_steps <- aggregate(steps ~ interval, data, mean)
 ```
-Now we can generate a time series plot with the ***plot.ts()*** function and fix the axis so it shows hours instead of 5 minutes intervals
+Now we can generate a time series plot with the `plot.ts()` function and fix the axis so it shows hours instead of 5 minutes intervals
 
 ```r
 plot.ts(mean_interval_steps$steps,
@@ -98,7 +98,7 @@ axis(2)
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
 ### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
-We need to find out the maximum average with the ***max()*** function and extract the interval that matches that max
+We need to find out the maximum average with the `max()` function and extract the interval that matches that max
 
 ```r
 mean_interval_steps[mean_interval_steps$steps==max(mean_interval_steps$steps),]
@@ -113,10 +113,19 @@ Interval 835 corresponds to the 104th interval of the day, between *8:35am* and 
 ## Imputing missing values
 
 ### 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-Since there is only one column with missing values we can simply use ***sum()*** and ***is.na()*** fucnctions
+Since there is only one column with missing values we can simply use `sum()` and `is.na()` fucnctions
 
 ```r
 sum(is.na(data$steps))
+```
+
+```
+## [1] 2304
+```
+Additionally, the `complete.cases()` function can be used
+
+```r
+sum(!complete.cases(data))
 ```
 
 ```
@@ -131,7 +140,7 @@ mean_interval_steps$steps <- round(mean_interval_steps$steps)
 ```
 
 ### 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
-We will go row by row, if *steps* is NA we will replace the value with the mean steps of *avg_intreval_steps* for the particular interval. The ***which()*** functions finds the replacement value.
+We will go row by row, if *steps* is NA we will replace the value with the mean steps of *avg_intreval_steps* for the particular interval. The `which()` functions finds the replacement value.
 
 ```r
 head(data)
@@ -165,6 +174,7 @@ head(new_data)
 ## 5     0 2012-10-01       20
 ## 6     2 2012-10-01       25
 ```
+Now we can confirm if all NA's have been replaced
 
 ```r
 sum(is.na(new_data$steps))
@@ -193,8 +203,9 @@ hist(new_daily_steps$steps,
      xlab = "Steps per Day", ylim=c(0,40))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-15-1.png) 
-Call ***mean()*** and ***median()*** directly to calculate daily values
+![](PA1_template_files/figure-html/unnamed-chunk-17-1.png) 
+
+Call `mean()` and `median()` directly to calculate daily values
 
 ```r
 mean(new_daily_steps$steps)
@@ -241,7 +252,7 @@ sum(new_daily_steps$steps) - sum(daily_steps$steps)
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
-We need to subset the data into weekdays and weekend. We can use the ***subset()*** and ***weekdays()*** functions for this
+We need to subset the data into weekdays and weekend. We can use the `subset()` and `weekdays()` functions for this
 
 
 ```r
@@ -274,6 +285,6 @@ axis(2)
 legend("topright", c("Weekdays", "Weekends"), lty=c(1,1), col=c("red", "blue"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-21-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-23-1.png) 
 
 There is less activity on the early hours on the weekends ~ 5 to 8am, most likely because people sleeping and there less activity on the weekdays starting around 10am, most likely because that is when people arrive to work or classes and spend less time walking
