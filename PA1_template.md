@@ -9,7 +9,7 @@ Read the data directly from the .zip file with the * **unz()*** function
 data <- read.csv(unz("activity.zip", "activity.csv"))
 ```
 ### 2. Process/transform the data (if necessary) into a format suitable for your analysis
-Check the structure of the data to make sure is in the format requiered. Using the output of ***str()***
+Check the structure of the data to make sure is in the format required. Using the output of ***str()***
 
 ```r
 str(data)
@@ -276,4 +276,4 @@ legend("topright", c("Weekdays", "Weekends"), lty=c(1,1), col=c("red", "blue"))
 
 ![](PA1_template_files/figure-html/unnamed-chunk-21-1.png) 
 
-There is less activity on the early hours on the weekends ~ 5 to 8am, most likely because people sleepin and there less activity on the weekdays starting around 10am, most likely because that is when people arrive to work or classes and spend less time walking
+There is less activity on the early hours on the weekends ~ 5 to 8am, most likely because people sleeping and there less activity on the weekdays starting around 10am, most likely because that is when people arrive to work or classes and spend less time walking
